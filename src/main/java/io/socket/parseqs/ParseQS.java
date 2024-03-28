@@ -25,8 +25,20 @@ public class ParseQS {
         String[] pairs = qs.split("&");
         for (String _pair : pairs) {
             String[] pair = _pair.split("=");
+
+            //Fixed query parameter value error when contain '='
+            StringBuilder builder = new StringBuilder();
+            if (pair.length >= 2) {
+                for (int i = 1; i < pair.length; i++) {
+                    if (!builder.toString().isEmpty()) {
+                        builder.append("=");
+                    }
+                    builder.append(pair[i]);
+                }
+            }
+
             qry.put(Global.decodeURIComponent(pair[0]),
-                    pair.length > 1 ? Global.decodeURIComponent(pair[1]) : "");
+                    pair.length > 1 ? Global.decodeURIComponent(builder.toString()) : "");
         }
         return qry;
     }
